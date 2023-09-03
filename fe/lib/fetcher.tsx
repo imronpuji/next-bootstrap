@@ -8,12 +8,12 @@ async function fetcher<T>(
   const options: {
     method: string
     headers: any
-    body?: any
+    body: any
   } = {
     method,
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token.token}`,
     },
   }
 
@@ -28,7 +28,7 @@ async function fetcher<T>(
       throw await response.json()
     }
     return response.json()
-  } catch (error: any) {
+  } catch (error) {
     if (Array.isArray(error)) {
       throw error[0]
     }
