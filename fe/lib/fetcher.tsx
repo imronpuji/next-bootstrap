@@ -7,8 +7,11 @@ async function fetcher<T>(
   const token = JSON.parse(localStorage.getItem("token") as string)
   const options: {
     method: string
-    headers: any
-    body: any
+    headers: {
+      "Content-Type": string
+      Authorization: string
+    }
+    body?: any
   } = {
     method,
     headers: {
@@ -28,7 +31,7 @@ async function fetcher<T>(
       throw await response.json()
     }
     return response.json()
-  } catch (error) {
+  } catch (error: any) {
     if (Array.isArray(error)) {
       throw error[0]
     }
