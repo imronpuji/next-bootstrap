@@ -4,15 +4,17 @@ async function fetcher<T>(
   method: string = "GET",
   data: any = null
 ): Promise<T | null> {
-  const token = JSON.parse(localStorage.getItem("token"))
-  const options: RequestInit = {
+  const token = JSON.parse(localStorage.getItem("token") as string)
+  const options: {
+    method: string
+    headers: any
+    body?: any
+  } = {
     method,
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
-  }
-  if (token) {
-    options.headers.Authorization = `Bearer ${token.token}`
   }
 
   if (data) {
@@ -26,7 +28,7 @@ async function fetcher<T>(
       throw await response.json()
     }
     return response.json()
-  } catch (error) {
+  } catch (error: any) {
     if (Array.isArray(error)) {
       throw error[0]
     }

@@ -29,7 +29,6 @@ const isPhoneNumberExist = async (phone_number) => {
 
 const index = async (req, res) => {
   const roleQuery = req.query.role
-  console.log(roleQuery)
 
   await res.json(
     await prisma.user.findMany({
@@ -99,13 +98,14 @@ const create = async (req, res) => {
     role_id: Joi.number().integer().required(),
     phone_number: Joi.string().min(11).max(13).required(),
     password: Joi.string().min(6).max(13).required(),
+    photo: Joi.string().min(6).max(1000),
   })
   const validate = schema.validate(req.body)
 
   try {
     if (!validate.error) {
       const {
-        value: { nickname, role_id, phone_number, password },
+        value: { nickname, role_id, phone_number, password, photo },
       } = validate
 
       if ((await isPhoneNumberExist(phone_number)).length > 0) {
@@ -122,7 +122,7 @@ const create = async (req, res) => {
 
       const hashPassword = bcrypt.hashSync(password, salt)
       const user = await prisma.user.create({
-        data: { nickname, phone_number, password: hashPassword },
+        data: { nickname, phone_number, password: hashPassword, photo },
       })
 
       await prisma.user_Role.create({
@@ -154,16 +154,18 @@ const addRole = async (req, res) => {
 const edit = async (req, res) => {
   const schema = Joi.object({
     nickname: Joi.string().min(3).max(30),
-    password: Joi.string().min(6).max(30),
     phone_number: Joi.string().min(6).max(30),
+    photo: Joi.string().min(6).max(1000),
   })
+
   const validate = schema.validate(req.body)
+
   try {
     if (!validate.error) {
-      const { nickname, passwordm, phone_number } = validate.value
+      const { nickname, phone_number, photo } = validate.value
       const user = await prisma.user.update({
         where: { id: parseInt(req.params.id) },
-        data: { nickname, passwordm, phone_number },
+        data: { nickname, phone_number, photo },
       })
       return await res.json({ data: user, message: "Data Berhasil Diubah", status: true })
     }
@@ -180,7 +182,6 @@ const remove = async (req, res) => {
 
   const validate = schema.validate(req.params)
   if (!validate.error) {
-    console.log(req.params.id)
     try {
       // statements
       const user_role = await prisma.user_Role.deleteMany({

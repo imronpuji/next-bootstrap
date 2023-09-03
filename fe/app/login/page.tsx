@@ -1,21 +1,15 @@
 "use client"
-import React, { useState } from "react"
-import { Form, Button, Container, Row, Col, Spinner } from "react-bootstrap"
-import { useForm, Controller } from "react-hook-form"
-import fetcher from "@/lib/fetcher"
-import { toast } from "react-toastify"
 import useAuth from "@/hooks/useAuth"
-
-interface LoginFormProps {
-  onSubmit: (data: LoginFormValues) => void
-}
+import React, { useState } from "react"
+import { Button, Col, Container, Form, Row, Spinner } from "react-bootstrap"
+import { Controller, useForm } from "react-hook-form"
 
 interface LoginFormValues {
   nickname: string
   password: string
 }
 
-const LoginForm: React.FC<LoginFormProps> = () => {
+const LoginForm = () => {
   const {
     handleSubmit,
     control,
@@ -26,9 +20,9 @@ const LoginForm: React.FC<LoginFormProps> = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const onSubmit = async (data: LoginFormValues) => {
-    setIsLoading(true) // Aktifkan loading ketika permintaan dimulai
+    setIsLoading(true)
 
-    const loginResponse = await login({
+    await login({
       nickname: data.nickname,
       password: data.password,
     })
@@ -82,12 +76,7 @@ const LoginForm: React.FC<LoginFormProps> = () => {
               </Form.Control.Feedback>
             </Form.Group>
 
-            <Button
-              variant="primary"
-              type="submit"
-              className="w-100 mt-3"
-              disabled={isLoading} // Menonaktifkan tombol jika isLoading aktif
-            >
+            <Button variant="primary" type="submit" className="w-100 mt-3" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Spinner

@@ -10,7 +10,7 @@ const bodyParser = require("body-parser"),
   swaggerJsdoc = require("swagger-jsdoc"),
   swaggerUi = require("swagger-ui-express")
 const authenticateToken = require("./middleware/authenticateToken")
-
+app.use(express.urlencoded({ extended: true }))
 app.use(fileUpload())
 app.use(cors())
 app.use(
@@ -32,7 +32,7 @@ const options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "Voting Ruas Digital",
+      title: "Manage user",
       version: "0.1.0",
       description: "Dokumentasi Lengkap Restfull Api",
       license: {

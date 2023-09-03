@@ -12,7 +12,7 @@ function Update({ params: { id } }: { params: { id: string } }) {
   return (
     <Row className="justify-content-center mt-5">
       <Col xs={12} md={6}>
-        <UserForm role="user" initialData={data as any} isEdit />
+        <UserForm role="employee" initialData={data as any} isEdit />
       </Col>
     </Row>
   )

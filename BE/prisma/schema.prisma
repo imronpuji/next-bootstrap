@@ -17,6 +17,7 @@ model User {
   verified_user       String?
   password            String?               @unique
   roles               User_Role[]
+  photo               String?
 }
 
 model Role_type {

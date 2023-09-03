@@ -1,7 +1,6 @@
 // create react auth hook for login
 
 import fetcher from "@/lib/fetcher"
-import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 
@@ -38,20 +37,23 @@ const useAuth = () => {
     const checkIsTokenValid = async () => {
       try {
         const checkTokenResponse: {
-          id: string
-        } = (await fetcher(`${backEndUrl}/user/profile`, "GET")) as { id: string }
+          id: number
+        } = (await fetcher(`${backEndUrl}/user/profile`, "GET")) as { id: number }
 
         if (!checkTokenResponse?.id) {
           localStorage.removeItem("token")
           window.location.href = "/login"
-        } else if (["/login", "/register"].includes(window.location.pathname)) {
+        }
+
+        if (["/login", "/register"].includes(window.location.pathname)) {
           window.location.href = "/"
         }
       } catch (err) {
-        toast.error(err.message)
+        if (["/"].includes(window.location.pathname)) {
+          window.location.href = "/login"
+        }
       }
     }
-
     checkIsTokenValid()
   }, [])
 
@@ -65,14 +67,14 @@ const useAuth = () => {
       if (loginResponse) {
         setUser(loginResponse)
         localStorage.setItem("token", JSON.stringify(loginResponse))
+        window.location.href = "/"
         toast.success("Login Berhasil")
       } else {
         toast.error("Username atau Password salah")
         return []
       }
-    } catch (error) {
-      console.log(error)
-      toast.error("Login Gagal")
+    } catch (error: any) {
+      toast.error(error.message)
       return []
     }
   }
